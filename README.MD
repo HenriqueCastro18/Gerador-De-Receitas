@@ -1,119 +1,254 @@
-Gerador de Receitas
-Visão Geral do Projeto
-Este é um projeto de um Gerador de Receitas construído com o framework web Django. A aplicação permite aos usuários criar e gerenciar suas próprias receitas, utilizando uma API externa para busca e tradução de informações detalhadas. O projeto foi desenvolvido com uma arquitetura modular, seguindo as melhores práticas do Django, e inclui funcionalidades robustas como um sistema de autenticação de usuário, gestão de perfis, um painel de moderação para receitas e uma interface de usuário completa e responsiva.
+# Gerador de Receitas
 
-Tecnologias Utilizadas
-O projeto foi desenvolvido com as seguintes tecnologias e bibliotecas:
 
-Linguagem: Python
 
-Framework Web: Django (versão 5.2.4)
 
-Banco de Dados: SQLite (padrão do Django para desenvolvimento)
 
-Estilização e Formulários:
+[](https://www.python.org/)
 
-Django Crispy Forms
+[](https://www.djangoproject.com/)
 
-Django Widget Tweaks
+[](https://opensource.org/licenses/MIT)
 
-Outras Bibliotecas:
 
-python-dotenv: Para gerenciar variáveis de ambiente de forma segura.
 
-Pillow (PIL): Para redimensionar imagens de perfil.
+#Construído com ❤️ por Henrique Castro
 
-rest_framework: Para a serialização de dados, indicando o uso de APIs.
 
-googletrans: Para tradução de textos, como nomes de receitas e ingredientes.
 
-django-cachalot: Para otimizar consultas ao banco de dados usando cache.
+*Uma plataforma completa para buscar, traduzir e gerenciar receitas, usando o poder do Django e APIs externas.*
 
-Bootstrap 5 e Font Awesome: Utilizados para estilização e ícones na interface do usuário.
 
-Funcionalidades Principais
-Autenticação de Usuário: Sistema completo de login, logout, registro e redefinição de senha com templates dedicados e estilizados.
 
-Gestão de Perfil: Os usuários podem visualizar e editar suas informações de perfil, incluindo o upload de uma foto que é redimensionada automaticamente. Também é possível alterar a senha e ver uma lista das receitas enviadas.
 
-Busca e Visualização de Receitas: O usuário pode buscar receitas por ingredientes e visualizar detalhes completos, incluindo uma lista de ingredientes e modo de preparo. Os resultados da busca são paginados.
 
-Receitas Favoritas: Os usuários autenticados podem adicionar receitas à sua lista de favoritos, que fica disponível em uma página específica.
+-----
 
-Avaliações e Comentários: É possível avaliar e comentar as receitas, com o ranking das mais bem avaliadas sendo exibido na página inicial.
 
-Sistema de Moderação: Um painel exclusivo para superusuários permite a moderação de receitas enviadas por outros usuários, com status de aprovado ou pendente.
 
-Página Inicial Dinâmica: A homepage exibe um ranking das receitas mais bem avaliadas para destacar o conteúdo popular da plataforma.
+## 📖 Tabela de Conteúdos
 
-Como Instalar e Rodar o Projeto
-Siga os passos abaixo para configurar e executar o projeto em sua máquina local.
 
-Pré-requisitos
+
+  * [💡 Sobre o Projeto](https://www.google.com/search?q=%23-sobre-o-projeto)
+
+  * [✨ Funcionalidades](https://www.google.com/search?q=%23-funcionalidades)
+
+  * [🚀 Tecnologias Utilizadas](https://www.google.com/search?q=%23-tecnologias-utilizadas)
+
+  * [📸 Screenshots](https://www.google.com/search?q=%23-screenshots)
+
+  * [🛠️ Como Rodar o Projeto](https://www.google.com/search?q=%23-como-rodar-o-projeto)
+
+  * [📝 Licença](https://www.google.com/search?q=%23-licen%C3%A7a)
+
+  * [🤝 Contribuições](https://www.google.com/search?q=%23-contribui%C3%A7%C3%B5es)
+
+
+
+-----
+
+
+
+## 💡 Sobre o Projeto
+
+
+
+O **Gerador de Receitas** é uma aplicação web robusta, desenvolvida com o framework **Django**, projetada para simplificar a busca e a organização de receitas. A plataforma se destaca por sua capacidade de integrar-se com a API externa **TheMealDB** para pesquisar receitas e traduzir o conteúdo dinamicamente para o português.
+
+
+
+O objetivo do projeto é oferecer uma experiência completa ao usuário, desde a navegação em um vasto catálogo de receitas até a criação e gestão de seu próprio conteúdo e perfil.
+
+
+
+## ✨ Funcionalidades
+
+
+
+| Funcionalidade                     | Descrição                                                                            |
+
+| :--------------------------------- | :----------------------------------------------------------------------------------- |
+
+| **Autenticação Completa** | Registro, login, logout e redefinição de senha com templates personalizados.           |
+
+| **Gerenciamento de Perfil** | Edição de informações e upload de foto de perfil com redimensionamento automático.      |
+
+| **Busca Dinâmica** | Pesquisa de receitas por ingredientes com resultados paginados.                        |
+
+| **Moderação de Conteúdo** | Painel de administrador para aprovar/rejeitar receitas enviadas pelos usuários.      |
+
+| **Ranking de Receitas** | A página inicial exibe as receitas mais bem avaliadas pelos usuários.                 |
+
+| **Favoritos e Avaliações** | Os usuários podem salvar receitas favoritas e deixar avaliações e comentários.          |
+
+
+
+## 🚀 Tecnologias Utilizadas
+
+
+
+A seguir estão as principais tecnologias e bibliotecas utilizadas no desenvolvimento do projeto:
+
+
+
+| Categoria | Tecnologia                                                                                             |
+
+| :-------- | :----------------------------------------------------------------------------------------------------- |
+
+| **Backend** |     |
+
+| **Frontend** |   |
+
+| **Integrações** |    |
+
+
+
+## 📸 Screenshots
+
+
+
+Aqui estão algumas capturas de tela da aplicação em funcionamento:
+
+
+
+### Página Inicial com Ranking de Receitas
+
+
+
+> *A imagem acima é um placeholder. Substitua o link pela URL da sua imagem (por exemplo, do Imgur ou do seu próprio repositório).*
+
+
+
+### Perfil do Usuário
+
+
+
+> *Dica: Use `![Descrição da imagem](URL_da_imagem)` para adicionar suas próprias imagens.*
+
+
+
+## 🛠️ Como Rodar o Projeto
+
+
+
+Siga os passos abaixo para ter uma cópia do projeto em execução na sua máquina.
+
+
+
+### Pré-requisitos
+
+
+
 Certifique-se de ter o seguinte software instalado:
 
-Python (versão 3.8 ou superior)
 
-pip (gerenciador de pacotes do Python)
 
-Git (opcional, para clonar o repositório)
+  * [Python](https://www.python.org/downloads/) (versão 3.8+)
 
-Instalação
-Clone o repositório:
+  * [pip](https://pip.pypa.io/en/stable/installation/) (gerenciador de pacotes do Python)
 
-Bash
+  * [Git](https://git-scm.com/downloads) (para clonar o repositório)
 
-git clone https://github.com/seu-usuario/gerador-receitas.git
-cd gerador-receitas
-(Substitua o link pelo endereço do seu repositório no GitHub)
 
-Crie e ative um ambiente virtual:
-É uma boa prática isolar as dependências do projeto.
 
-Bash
+### Instalação
 
-python -m venv venv
-Windows:
 
-Bash
 
-venv\Scripts\activate
-macOS e Linux:
+1.  **Clone o repositório:**
 
-Bash
+    ```bash
 
-source venv/bin/activate
-Instale as dependências:
-Crie o arquivo requirements.txt com o comando pip freeze > requirements.txt e instale as dependências:
+    git clone https://github.com/seu-usuario/gerador-receitas.git
 
-Bash
+    cd gerador-receitas
 
-pip install -r requirements.txt
-Configure as variáveis de ambiente:
-Crie um arquivo chamado .env na raiz do projeto e adicione suas chaves secretas e configurações. Exemplo:
+    ```
 
-Ini, TOML
+2.  **Crie e ative um ambiente virtual:**
 
-DJANGO_SECRET_KEY='sua-chave-secreta-aqui'
-DJANGO_DEBUG='True'
-EMAIL_HOST_USER='seu-email@gmail.com'
-EMAIL_HOST_PASSWORD='sua-senha-de-app-do-google'
-Execute as migrações do banco de dados:
+    ```bash
 
-Bash
+    python -m venv venv
 
-python manage.py migrate
-Crie um superusuário (opcional, para acessar o painel de admin e moderação):
+    source venv/bin/activate  # Para macOS e Linux
 
-Bash
+    # venv\Scripts\activate   # Para Windows
 
-python manage.py createsuperuser
-Siga as instruções para criar seu usuário e senha.
+    ```
 
-Como Rodar o Projeto
-Após a instalação, inicie o servidor de desenvolvimento do Django com o seguinte comando:
+3.  **Instale as dependências:**
 
-Bash
+    ```bash
+
+    pip install -r requirements.txt
+
+    ```
+
+4.  **Configure as variáveis de ambiente:**
+
+    Crie um arquivo `.env` na raiz do projeto com suas chaves e credenciais.
+
+    ```ini
+
+    DJANGO_SECRET_KEY='sua-chave-secreta-aqui'
+
+    DJANGO_DEBUG='True'
+
+    EMAIL_HOST_USER='seu-email@gmail.com'
+
+    EMAIL_HOST_PASSWORD='sua-senha-de-app-do-google'
+
+    ```
+
+5.  **Execute as migrações e crie um superusuário (opcional):**
+
+    ```bash
+
+    python manage.py migrate
+
+    python manage.py createsuperuser
+
+    ```
+
+
+
+### Iniciar a Aplicação
+
+
+
+```bash
 
 python manage.py runserver
-O projeto estará disponível em http://127.0.0.1:8000.
+
+```
+
+
+
+Acesse o projeto em `http://127.0.0.1:8000`.
+
+
+
+## 📝 Licença
+
+
+
+Este projeto está licenciado sob a Licença MIT. Veja o arquivo [LICENSE.md](LICENSE.md) para mais detalhes.
+
+
+
+## 🤝 Contribuições
+
+
+
+Sinta-se à vontade para contribuir\! Para propor melhorias ou relatar bugs, abra uma `issue` ou crie um `pull request`.
+
+
+
+## 👨‍💻 Autor
+
+
+
+  - [HenriqueCastro18](https://github.com/HenriqueCastro18)
+
