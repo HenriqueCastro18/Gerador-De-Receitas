@@ -1,7 +1,5 @@
 # Gerador de Receitas
 
-\<div align="center"\>
-
 [](https://www.python.org/)
 [](https://www.djangoproject.com/)
 [](https://opensource.org/licenses/MIT)
