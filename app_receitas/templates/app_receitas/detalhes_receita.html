@@ -1,0 +1,215 @@
+{% extends "app_receitas/base.html" %}
+
+{% block title %}Detalhes da Receita: {{ receita.nome }}{% endblock %}
+
+{% block content %}
+<style>
+    /* Estilos personalizados para a página de detalhes */
+    .recipe-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 2rem;
+    }
+
+    .recipe-header h1 {
+        flex-grow: 1;
+        text-align: center;
+        font-weight: 700;
+        color: #343a40;
+    }
+
+    .recipe-details-card {
+        border: none;
+        border-radius: 1rem;
+        box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
+        transition: transform 0.2s ease-in-out;
+    }
+
+    .recipe-details-card:hover {
+        transform: translateY(-5px);
+    }
+
+    .card-body h3 {
+        color: #007bff;
+        /* Cor primária do Bootstrap */
+        font-weight: 600;
+        margin-bottom: 1rem;
+    }
+
+    .ingredient-list li {
+        margin-bottom: 0.5rem;
+        font-size: 1rem;
+    }
+
+    .ingredient-list i {
+        color: #28a745;
+        /* Cor de sucesso do Bootstrap */
+    }
+
+    .instructions-text {
+        line-height: 1.8;
+        font-size: 1.1rem;
+        color: #495057;
+    }
+
+    .rating-badge {
+        font-size: 1.25rem;
+        padding: 0.5rem 1rem;
+        border-radius: 50px;
+    }
+
+    .comment-card {
+        border-left: 3px solid #007bff;
+    }
+
+    .favorite-btn {
+        transition: all 0.3s ease;
+    }
+
+    .favorite-btn:hover {
+        transform: scale(1.05);
+    }
+</style>
+
+<div class="container my-5">
+    <div class="recipe-header">
+        <h1 class="mb-0 text-center">{{ receita.nome }}</h1>
+        {% if user.is_authenticated %}
+        <form method="post"
+            action="{% url 'app_receitas:adicionar_remover_favoritos' external_id=receita.external_id %}">
+            {% csrf_token %}
+            <button type="submit"
+                class="btn favorite-btn {% if is_favorita %}btn-danger{% else %}btn-warning{% endif %}">
+                {% if is_favorita %}
+                <i class="fas fa-heart me-2"></i>Remover dos Favoritos
+                {% else %}
+                <i class="far fa-heart me-2"></i>Adicionar aos Favoritos
+                {% endif %}
+            </button>
+        </form>
+        {% endif %}
+    </div>
+
+    <div class="text-center text-muted mb-4">
+        <i class="fas fa-heart me-1 text-danger"></i> {{ contador_favoritos }} favoritos
+    </div>
+
+    <div class="row g-5">
+        <div class="col-md-6">
+            {% if receita.imagem_url %}
+            <div class="recipe-details-card mb-4">
+                <div class="card-body p-0">
+                    <img src="{{ receita.imagem_url }}" alt="Imagem de {{ receita.nome }}"
+                        class="img-fluid rounded-4 shadow">
+                </div>
+            </div>
+            {% else %}
+            <div class="text-center text-muted p-5 border rounded-4 bg-light mb-4 shadow">
+                <i class="fas fa-utensils fa-5x mb-3 text-secondary"></i>
+                <p>Imagem não disponível</p>
+            </div>
+            {% endif %}
+
+            {% if receita.link_youtube %}
+            <div class="recipe-details-card mt-3">
+                <div class="card-body">
+                    <h3 class="mb-3">Vídeo de Preparação</h3>
+                    <div class="ratio ratio-16x9">
+                        <iframe src="https://www.youtube.com/embed/{{ receita.link_youtube|slice:'-11:' }}"
+                            title="YouTube video player" frameborder="0"
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                            allowfullscreen></iframe>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+
+        <div class="col-md-6">
+            <div class="recipe-details-card mb-4">
+                <div class="card-body">
+                    <h3><i class="fas fa-book-open me-2"></i>Ingredientes</h3>
+                    <ul class="list-unstyled ingredient-list">
+                        {% for ingrediente in receita.ingredientes %}
+                        <li><i class="fas fa-check-circle me-2"></i> {{ ingrediente }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+
+            <div class="recipe-details-card">
+                <div class="card-body">
+                    <h3><i class="fas fa-clipboard-list me-2"></i>Instruções</h3>
+                    <p class="card-text instructions-text">{{ receita.instrucoes|safe }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mt-5">
+        <div class="col-12">
+            <hr class="my-5">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2>Avaliações & Comentários</h2>
+                <span class="badge bg-success rating-badge">
+                    <i class="fas fa-star me-2"></i> {{ media_avaliacoes|floatformat:1|default_if_none:"N/A" }}
+                </span>
+            </div>
+
+            {% if user.is_authenticated %}
+            <div class="card recipe-details-card p-4 mb-4">
+                <h3>Deixar uma Avaliação</h3>
+                <form method="post"
+                    action="{% url 'app_receitas:detalhes_receita' external_id=receita.external_id %}">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label for="{{ avaliacao_form.nota.id_for_label }}" class="form-label">Sua Nota:</label>
+                        {{ avaliacao_form.nota }}
+                    </div>
+                    <button type="submit" name="submit_avaliacao" class="btn btn-success mt-2">Avaliar</button>
+                </form>
+            </div>
+            <div class="card recipe-details-card p-4 mb-4">
+                <h3>Adicionar um Comentário</h3>
+                <form method="post"
+                    action="{% url 'app_receitas:detalhes_receita' external_id=receita.external_id %}">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label for="{{ comentario_form.texto.id_for_label }}" class="form-label">Seu
+                            Comentário:</label>
+                        {{ comentario_form.texto }}
+                    </div>
+                    <button type="submit" name="submit_comentario" class="btn btn-primary mt-2">Enviar
+                        Comentário</button>
+                </form>
+            </div>
+            {% else %}
+            <div class="alert alert-info rounded-4">
+                <a href="{% url 'app_receitas:login' %}?next={{ request.path|urlencode }}">Faça login</a> para
+                avaliar ou comentar.
+            </div>
+            {% endif %}
+
+            <div class="mt-4">
+                <h3>Comentários Anteriores</h3>
+                {% if comentarios %}
+                <div class="list-group">
+                    {% for comentario in comentarios %}
+                    <div class="list-group-item list-group-item-action mb-2 rounded-4 comment-card">
+                        <div class="d-flex w-100 justify-content-between">
+                            <h5 class="mb-1 fw-bold">{{ comentario.user.username }}</h5>
+                            <small class="text-muted">{{ comentario.data_comentario|date:"d/m/Y H:i" }}</small>
+                        </div>
+                        <p class="mb-1">{{ comentario.texto }}</p>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <p>Nenhum comentário ainda. Seja o primeiro a comentar!</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

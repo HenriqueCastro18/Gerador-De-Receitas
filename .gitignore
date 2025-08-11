@@ -1,0 +1,25 @@
+# Ignora arquivos de ambiente virtual
+venv/
+*.venv/
+env/
+*.env/
+
+# Ignora o arquivo de banco de dados do SQLite
+db.sqlite3
+
+# Ignora variáveis de ambiente (altamente importante para segurança!)
+.env
+
+# Ignora arquivos de cache do Python
+__pycache__/
+*.pyc
+
+# Ignora arquivos de media e static (em produção, estes são gerenciados de outra forma)
+/media/
+/static/
+
+# Ignora pastas de cache do Django
+/gerador_receitas/cache/
+
+# Ignora logs
+*.log

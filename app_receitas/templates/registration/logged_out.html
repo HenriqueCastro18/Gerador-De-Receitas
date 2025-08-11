@@ -1,0 +1,15 @@
+{% extends "app_receitas/base.html" %}
+
+{% block title %}Sessão Encerrada{% endblock %}
+{% block brand %}Receitas{% endblock %}
+
+{% block content %}
+<div class="card p-4 mx-auto" style="max-width: 500px; margin-top: 50px;">
+    <h1 class="card-title text-center">Sessão Encerrada</h1>
+    <p class="card-text text-center">Você saiu da sua conta com sucesso.</p>
+    <div class="text-center">
+        <a href="{% url 'app_receitas:login' %}" class="btn btn-primary mt-3">Fazer Login Novamente</a>
+        <a href="{% url 'app_receitas:index' %}" class="btn btn-secondary mt-3">Ir para a Página Inicial</a>
+    </div>
+</div>
+{% endblock %}

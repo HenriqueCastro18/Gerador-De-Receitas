@@ -1,0 +1,171 @@
+{% extends "app_receitas/base.html" %}
+{% load static %}
+{% load cache %}
+
+{% block content %}
+<style>
+    /* Estilos para a página inicial */
+    body, html {
+        height: 100%;
+        margin: 0;
+    }
+    .hero-section {
+        background: linear-gradient(to bottom, #d6eaff, #e8f3ff);
+        background-size: cover;
+        height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        color: #212529; /* Cor do texto para contraste */
+    }
+    .hero-content {
+        max-width: 800px;
+        padding: 2rem;
+        background-color: transparent; /* Remove o fundo do conteúdo para destacar o card */
+        border-radius: 1rem;
+    }
+    .hero-content h1 {
+        font-size: 3.5rem;
+        font-weight: 700;
+        margin-bottom: 1rem;
+        color: #0d6efd; /* Cor primária do Bootstrap */
+    }
+    .hero-content p {
+        font-size: 1.25rem;
+        margin-bottom: 2rem;
+    }
+    .search-form-card {
+        background-color: #ffffff; /* Fundo branco para o card de busca */
+        border: none;
+        border-radius: 1rem;
+        box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+    }
+    .form-control, .form-select {
+        border-radius: 0.5rem;
+    }
+    .btn-search {
+        background-color: #0d6efd; /* Azul primário do Bootstrap */
+        border-color: #0d6efd;
+        font-weight: bold;
+        transition: background-color 0.3s ease;
+    }
+    .btn-search:hover {
+        background-color: #0b5ed7;
+        border-color: #0a58ca;
+    }
+
+    /* Novos estilos para a seção de ranking */
+    .ranking-section {
+        background-color: #f8f9fa;
+        padding: 4rem 0;
+    }
+    .ranking-section h2 {
+        font-weight: 700;
+        color: #0d6efd;
+    }
+    .recipe-card {
+        border: none;
+        border-radius: 1rem;
+        box-shadow: 0 0.25rem 0.5rem rgba(0,0,0,0.1);
+        transition: transform 0.2s ease-in-out;
+    }
+    .recipe-card:hover {
+        transform: translateY(-5px);
+    }
+    .recipe-card-img {
+        height: 200px;
+        object-fit: cover;
+        border-top-left-radius: 1rem;
+        border-top-right-radius: 1rem;
+    }
+</style>
+
+<div class="hero-section">
+    <div class="container hero-content">
+        <h1>Gerador de Receitas</h1>
+        <p>Encontre a sua próxima receita favorita por ingredientes, área ou categoria!</p>
+        <div class="card search-form-card mx-auto p-4">
+            <h2 class="mb-4 text-center text-primary">Pesquise Agora</h2>
+            <form action="{% url 'app_receitas:buscar_receitas' %}" method="get">
+                <div class="row g-3">
+                    <div class="col-12">
+                        <label for="ingredientes" class="form-label text-start w-100">Ingredientes:</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fas fa-carrot text-muted"></i></span>
+                            <input type="text" class="form-control" id="ingredientes" name="ingredientes" placeholder="Ex: frango, arroz, tomate">
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                            <label for="area-select" class="form-label">Cozinha</label>
+                            <select class="form-select" id="area-select" name="area">
+                                <option value="">Todas as Cozinhas</option>
+                                <option value="American" {% if query_area and query_area == "American" %}selected{% endif %}>Americana</option>
+                                <option value="British" {% if query_area and query_area == "British" %}selected{% endif %}>Britânica</option>
+                                <option value="Canadian" {% if query_area and query_area == "Canadian" %}selected{% endif %}>Canadense</option>
+                                <option value="Chinese" {% if query_area and query_area == "Chinese" %}selected{% endif %}>Chinesa</option>
+                                <option value="Egyptian" {% if query_area and query_area == "Egyptian" %}selected{% endif %}>Egípcia</option>
+                                <option value="French" {% if query_area and query_area == "French" %}selected{% endif %}>Francesa</option>
+                                <option value="Indian" {% if query_area and query_area == "Indian" %}selected{% endif %}>Indiana</option>
+                                <option value="Italian" {% if query_area and query_area == "Italian" %}selected{% endif %}>Italiana</option>
+                                <option value="Japanese" {% if query_area and query_area == "Japanese" %}selected{% endif %}>Japonesa</option>
+                                <option value="Mexican" {% if query_area and query_area == "Mexican" %}selected{% endif %}>Mexicana</option>
+                                <option value="Spanish" {% if query_area and query_area == "Spanish" %}selected{% endif %}>Espanhola</option>
+                            </select>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label for="categoria-select" class="form-label">Categoria</label>
+                            <select class="form-select" id="categoria-select" name="categoria">
+                                <option value="">Todas as Categorias</option>
+                                <option value="Beef" {% if query_categoria and query_categoria == "Beef" %}selected{% endif %}>Carne</option>
+                                <option value="Chicken" {% if query_categoria and query_categoria == "Chicken" %}selected{% endif %}>Frango</option>
+                                <option value="Dessert" {% if query_categoria and query_categoria == "Dessert" %}selected{% endif %}>Sobremesa</option>
+                                <option value="Lamb" {% if query_categoria and query_categoria == "Lamb" %}selected{% endif %}>Cordeiro</option>
+                                <option value="Pasta" {% if query_categoria and query_categoria == "Pasta" %}selected{% endif %}>Massa</option>
+                                <option value="Pork" {% if query_categoria and query_categoria == "Pork" %}selected{% endif %}>Porco</option>
+                                <option value="Seafood" {% if query_categoria and query_categoria == "Seafood" %}selected{% endif %}>Frutos do Mar</option>
+                                <option value="Side" {% if query_categoria and query_categoria == "Side" %}selected{% endif %}>Acompanhamento</option>
+                                <option value="Starter" {% if query_categoria and query_categoria == "Starter" %}selected{% endif %}>Entrada</option>
+                                <option value="Vegan" {% if query_categoria and query_categoria == "Vegan" %}selected{% endif %}>Vegana</option>
+                                <option value="Vegetarian" {% if query_categoria and query_categoria == "Vegetarian" %}selected{% endif %}>Vegetariana</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="d-grid mt-4">
+                    <button type="submit" class="btn btn-search btn-lg rounded-pill">
+                        <i class="fas fa-search me-2"></i>Buscar Receitas
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+{% cache 900 top_receitas_homepage %}
+<div class="ranking-section">
+    <div class="container">
+        <h2 class="text-center mb-5">⭐ Receitas Mais Avaliadas</h2>
+        {% if top_receitas %}
+        <div class="row g-4">
+            {% for receita in top_receitas %}
+            <div class="col-md-4">
+                <div class="card recipe-card h-100">
+                    <img src="{% if receita.imagem %}{{ receita.imagem.url }}{% else %}{{ receita.imagem_url }}{% endif %}" class="card-img-top recipe-card-img" alt="{{ receita.nome }}">
+                    <div class="card-body d-flex flex-column">
+                        <h5 class="card-title">{{ receita.nome }}</h5>
+                        <p class="card-text text-muted">Média: <span class="fw-bold text-success">{{ receita.media_avaliacoes|floatformat:2 }}</span> <i class="fas fa-star text-warning"></i></p>
+                        <a href="{% url 'app_receitas:detalhes_receita' receita.external_id %}" class="btn btn-primary mt-auto">Ver Receita</a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <p class="text-center text-muted">Nenhuma receita avaliada ainda. Seja o primeiro a dar uma nota!</p>
+        {% endif %}
+    </div>
+</div>
+{% endcache %}
+{% endblock %}

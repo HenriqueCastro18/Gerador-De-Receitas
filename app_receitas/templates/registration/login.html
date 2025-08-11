@@ -1,0 +1,76 @@
+{% extends 'app_receitas/base_centralizado.html' %}
+{% load static %}
+{% load widget_tweaks %}
+
+{% block title %}Entrar{% endblock %}
+
+{% block centered_content %}
+<div class="card shadow-lg border-0 rounded-4 w-100 p-4">
+    <div class="text-center mb-4">
+        <h2 class="text-primary fw-bold">Bem-vindo de volta!</h2>
+        <p class="text-muted">Acesse sua conta para continuar.</p>
+    </div>
+
+    {% if form.errors %}
+    <div class="alert alert-danger" role="alert">
+        Ocorreu um erro. Por favor, verifique seus dados.
+    </div>
+    {% endif %}
+
+    <form method="post">
+        {% csrf_token %}
+
+        <div class="mb-3">
+            <label for="id_username" class="form-label fw-bold">Nome de Usuário</label>
+            <div class="input-group">
+                <span class="input-group-text"><i class="fas fa-user"></i></span>
+                {% render_field form.username class="form-control" placeholder="Seu nome de usuário" %}
+            </div>
+        </div>
+
+        <div class="mb-3">
+            <label for="id_password" class="form-label fw-bold">Senha</label>
+            <div class="input-group">
+                <span class="input-group-text"><i class="fas fa-lock"></i></span>
+                {% render_field form.password class="form-control" placeholder="Sua senha" %}
+                <button class="btn btn-outline-secondary" type="button" id="togglePassword">
+                    <i class="fas fa-eye-slash" id="toggleIcon"></i>
+                </button>
+            </div>
+        </div>
+        
+        <div class="d-grid mt-4">
+            <button type="submit" class="btn btn-primary btn-lg rounded-pill fw-bold">Entrar</button>
+        </div>
+
+        <p class="text-center mt-3 mb-0"><a href="{% url 'password_reset' %}" class="text-decoration-none">Esqueceu a senha?</a></p>
+    </form>
+    
+    <div class="text-center mt-4">
+        <p class="mb-0">Ainda não tem uma conta? <a href="{% url 'app_receitas:registro' %}" class="text-decoration-none fw-bold">Registar-se</a></p>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const togglePassword = document.getElementById('togglePassword');
+        const passwordField = document.getElementById('id_password');
+        const toggleIcon = document.getElementById('toggleIcon');
+
+        if (togglePassword && passwordField && toggleIcon) {
+            togglePassword.addEventListener('click', function () {
+                const type = passwordField.getAttribute('type') === 'password' ? 'text' : 'password';
+                passwordField.setAttribute('type', type);
+                
+                if (type === 'password') {
+                    toggleIcon.classList.remove('fa-eye');
+                    toggleIcon.classList.add('fa-eye-slash');
+                } else {
+                    toggleIcon.classList.remove('fa-eye-slash');
+                    toggleIcon.classList.add('fa-eye');
+                }
+            });
+        }
+    });
+</script>
+{% endblock %}

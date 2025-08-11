@@ -1,0 +1,161 @@
+{% extends 'app_receitas/base.html' %}
+{% load static %}
+
+{% block title %}Meu Perfil{% endblock %}
+
+{% block content %}
+<style>
+    body {
+        background-color: #f0f2f5;
+    }
+
+    .profile-card {
+        margin-top: 1rem;
+        border-radius: 1rem;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+        overflow: hidden;
+    }
+
+    .profile-header {
+        background: linear-gradient(135deg, #0d6efd, #0b5ed7);
+        color: white;
+        text-align: center;
+        padding-top: 4rem;
+        padding-bottom: 4rem;
+        position: relative;
+    }
+
+    .profile-photo-container {
+        width: 150px;
+        height: 150px;
+        margin: -75px auto 20px;
+        border-radius: 50%;
+        overflow: hidden;
+        border: 6px solid #fff;
+        box-shadow: 0 0 15px rgba(0, 0, 0, 0.15);
+        background-color: #f8f9fa;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        position: relative;
+        z-index: 10;
+    }
+
+    .profile-photo-container img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .info-section {
+        padding: 2rem;
+        text-align: center;
+    }
+
+    .account-actions {
+        padding: 2rem;
+        border-top: 1px solid #e9ecef;
+    }
+
+    .btn-custom {
+        border-radius: 50px;
+        font-weight: bold;
+        transition: all 0.3s ease;
+        padding: 12px 25px;
+    }
+
+    .btn-custom-primary {
+        background-color: #0d6efd;
+        color: #fff;
+        border: 2px solid #0d6efd;
+    }
+
+    .btn-custom-primary:hover {
+        background-color: #0b5ed7;
+        color: #fff;
+        border: 2px solid #0b5ed7;
+        transform: translateY(-2px);
+    }
+
+    .btn-custom-secondary {
+        background-color: #6c757d;
+        color: #fff;
+        border: 2px solid #6c757d;
+    }
+
+    .btn-custom-secondary:hover {
+        background-color: #5c636a;
+        color: #fff;
+        border: 2px solid #5c636a;
+        transform: translateY(-2px);
+    }
+</style>
+
+<div class="container mt-1 mb-5">
+        <div class="row justify-content-center">
+                <div class="col-md-8">
+                        <div class="card profile-card border-0">
+                                <div class="profile-header">
+                                        <h2 class="fw-bold">Meu Perfil</h2>
+                                    </div>
+
+                                <div class="card-body">
+                                        <div class="profile-photo-container">
+                                                {% if user.profile.foto %}
+                                                    <img src="{{ user.profile.foto.url }}" alt="Foto de Perfil">
+                                                {% else %}
+                                                    <img src="{% static 'images/default-avatar.png' %}"
+                            alt="Foto de Perfil Padrão">
+                                                {% endif %}
+                                            </div>
+
+                                        <div class="info-section">
+                                                <h3 class="fw-bold mb-1 text-dark">{{ user.username }}</h3>
+                                                <p class="text-muted">{{ user.email }}</p>
+                                            </div>
+                                    </div>
+
+                                <div class="account-actions">
+                                        <h4 class="fw-bold mb-3">Configurações da Conta</h4>
+                                        <div class="d-grid gap-3">
+                                                <a href="{% url 'app_receitas:editar_perfil' %}"
+                            class="btn btn-custom btn-custom-primary">
+                                                        <i class="fas fa-edit me-2"></i>Editar Perfil
+                                                    </a>
+                                                <a href="{% url 'app_receitas:mudar_senha' %}"
+                            class="btn btn-custom btn-custom-secondary">
+                                                        <i class="fas fa-key me-2"></i>Mudar Senha
+                                                    </a>
+                                            </div>
+                                    </div>
+
+                <!-- NOVO: Seção para exibir as receitas enviadas -->
+                <div class="card-body">
+                    <h4 class="fw-bold mb-3">Minhas Receitas Enviadas</h4>
+                    <div class="list-group">
+                        {% if receitas_enviadas %}
+                        {% for receita in receitas_enviadas %}
+                        <a href="{% url 'app_receitas:detalhes_receita' external_id=receita.external_id %}"
+                            class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                            <span>{{ receita.nome }}</span>
+                            {% if receita.status == 'aprovado' %}
+                            <span class="badge bg-success">Aprovado</span>
+                            {% else %}
+                            <span class="badge bg-warning text-dark">Pendente</span>
+                            {% endif %}
+                        </a>
+                        {% endfor %}
+                        {% else %}
+                        <div class="alert alert-info" role="alert">
+                            Você ainda não enviou nenhuma receita.
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                           
+            </div>
+                    </div>
+            </div>
+</div>
+{% endblock %}

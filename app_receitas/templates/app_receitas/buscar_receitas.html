@@ -1,0 +1,172 @@
+{% extends 'app_receitas/base.html' %}
+{% block title %}Resultados da Busca{% endblock %}
+
+{% block content %}
+<style>
+    .search-card {
+        background-color: #f8f9fa;
+        border: none;
+        border-radius: 1rem;
+        box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.05);
+    }
+
+    .recipe-card {
+        transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+        border-radius: 1rem;
+        overflow: hidden;
+    }
+
+    .recipe-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+    }
+
+    .recipe-card img {
+        height: 250px;
+        object-fit: cover;
+    }
+
+    .recipe-card .card-body {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+    }
+
+    .no-results-card {
+        border-radius: 1rem;
+        box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.05);
+    }
+</style>
+
+<div class="container my-5">
+    <div class="row">
+        <div class="col-md-8 offset-md-2">
+            <div class="card search-card p-4 mb-5">
+                <h1 class="my-4 text-center text-primary">
+                    <i class="fas fa-search me-2"></i> Buscar Receitas
+                </h1>
+                <form method="get" action="{% url 'app_receitas:buscar_receitas' %}">
+                    <div class="row g-3">
+                        <div class="col-md-12">
+                            <label for="nome-input" class="form-label">Nome da Receita</label>
+                            <input type="text" class="form-control" id="nome-input" placeholder="Ex: Pizza" name="nome"
+                                value="{{ query_nome|default:'' }}">
+                        </div>
+
+                        <div class="col-md-12">
+                            <label for="ingredientes-input" class="form-label">Ingredientes</label>
+                            <input type="text" class="form-control" id="ingredientes-input"
+                                placeholder="Ex: frango, cebola" name="ingredientes"
+                                value="{{ query_ingredientes|default:'' }}">
+                        </div>
+
+                        <div class="col-md-6">
+                            <label for="area-select" class="form-label">Cozinha</label>
+                            <select class="form-select" id="area-select" name="area">
+                                <option value="">Todas as Cozinhas</option>
+                                <option value="American" {% if query_area and query_area == "American" %}selected{% endif %}>Americana</option>
+                                <option value="British" {% if query_area and query_area == "British" %}selected{% endif %}>Britânica</option>
+                                <option value="Canadian" {% if query_area and query_area == "Canadian" %}selected{% endif %}>Canadense</option>
+                                <option value="Chinese" {% if query_area and query_area == "Chinese" %}selected{% endif %}>Chinesa</option>
+                                <option value="Egyptian" {% if query_area and query_area == "Egyptian" %}selected{% endif %}>Egípcia</option>
+                                <option value="French" {% if query_area and query_area == "French" %}selected{% endif %}>Francesa</option>
+                                <option value="Indian" {% if query_area and query_area == "Indian" %}selected{% endif %}>Indiana</option>
+                                <option value="Italian" {% if query_area and query_area == "Italian" %}selected{% endif %}>Italiana</option>
+                                <option value="Japanese" {% if query_area and query_area == "Japanese" %}selected{% endif %}>Japonesa</option>
+                                <option value="Mexican" {% if query_area and query_area == "Mexican" %}selected{% endif %}>Mexicana</option>
+                                <option value="Spanish" {% if query_area and query_area == "Spanish" %}selected{% endif %}>Espanhola</option>
+                            </select>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label for="categoria-select" class="form-label">Categoria</label>
+                            <select class="form-select" id="categoria-select" name="categoria">
+                                <option value="">Todas as Categorias</option>
+                                <option value="Beef" {% if query_categoria and query_categoria == "Beef" %}selected{% endif %}>Carne</option>
+                                <option value="Chicken" {% if query_categoria and query_categoria == "Chicken" %}selected{% endif %}>Frango</option>
+                                <option value="Dessert" {% if query_categoria and query_categoria == "Dessert" %}selected{% endif %}>Sobremesa</option>
+                                <option value="Lamb" {% if query_categoria and query_categoria == "Lamb" %}selected{% endif %}>Cordeiro</option>
+                                <option value="Pasta" {% if query_categoria and query_categoria == "Pasta" %}selected{% endif %}>Massa</option>
+                                <option value="Pork" {% if query_categoria and query_categoria == "Pork" %}selected{% endif %}>Porco</option>
+                                <option value="Seafood" {% if query_categoria and query_categoria == "Seafood" %}selected{% endif %}>Frutos do Mar</option>
+                                <option value="Side" {% if query_categoria and query_categoria == "Side" %}selected{% endif %}>Acompanhamento</option>
+                                <option value="Starter" {% if query_categoria and query_categoria == "Starter" %}selected{% endif %}>Entrada</option>
+                                <option value="Vegan" {% if query_categoria and query_categoria == "Vegan" %}selected{% endif %}>Vegana</option>
+                                <option value="Vegetarian" {% if query_categoria and query_categoria == "Vegetarian" %}selected{% endif %}>Vegetariana</option>
+                            </select>
+                        </div>
+
+                        <div class="d-grid mt-4">
+                            <button class="btn btn-primary btn-lg rounded-pill" type="submit">
+                                <i class="fas fa-search me-2"></i> Buscar
+                            </button>
+                        </div>
+                </form>
+            </div>
+
+            {% if message %}
+            <div class="alert alert-info text-center">{{ message }}</div>
+            {% endif %}
+
+            {% if receitas_encontradas %}
+            <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+                {% for receita in receitas_encontradas %}
+                <div class="col">
+                    <div class="card h-100 recipe-card shadow-sm">
+                        {% if receita.imagem_url %}
+                        <img src="{{ receita.imagem_url }}" class="card-img-top" alt="{{ receita.nome }}">
+                        {% endif %}
+                        <div class="card-body">
+                            <h5 class="card-title">
+                                {{ receita.nome }}
+                            </h5>
+                            {% if receita.external_id %}
+                            <a href="{% url 'app_receitas:detalhes_receita' external_id=receita.external_id %}"
+                                class="btn btn-primary mt-3 w-100">Ver Receita</a>
+                            {% else %}
+                            <button class="btn btn-secondary mt-3 w-100" disabled>Receita Indisponível</button>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+
+            <nav aria-label="Navegação de páginas">
+                <ul class="pagination justify-content-center mt-4">
+                    {% if receitas_encontradas.has_previous %}
+                    <li class="page-item">
+                        <a class="page-link"
+                            href="?{{ query_string }}&page={{ receitas_encontradas.previous_page_number }}">Anterior</a>
+                    </li>
+                    {% endif %}
+
+                    {% for i in receitas_encontradas.paginator.page_range %}
+                    {% if receitas_encontradas.number == i %}
+                    <li class="page-item active" aria-current="page"><span class="page-link">{{ i }}</span></li>
+                    {% else %}
+                    <li class="page-item"><a class="page-link" href="?{{ query_string }}&page={{ i }}">{{ i }}</a></li>
+                    {% endif %}
+                    {% endfor %}
+
+                    {% if receitas_encontradas.has_next %}
+                    <li class="page-item">
+                        <a class="page-link"
+                            href="?{{ query_string }}&page={{ receitas_encontradas.next_page_number }}">Próximo</a>
+                    </li>
+                    {% endif %}
+                </ul>
+            </nav>
+            {% else %}
+            <div class="text-center my-5">
+                <div class="card p-5 shadow-sm mx-auto no-results-card" style="max-width: 600px;">
+                    <i class="fas fa-search-minus fa-6x text-muted mb-4"></i>
+                    <h2 class="mb-3">Nenhuma Receita Encontrada</h2>
+                    <p class="text-muted">Tente ajustar seus termos de busca ou filtros.</p>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}s
